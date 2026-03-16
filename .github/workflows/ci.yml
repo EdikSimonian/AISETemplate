@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # -------------------------------------------------------
+  # Lint & Format Check
+  # -------------------------------------------------------
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check formatting (black)
+        run: black --check .
+
+      - name: Check import order (isort)
+        run: isort --check-only .
+
+      - name: Lint (flake8)
+        run: flake8 .
+
+  # -------------------------------------------------------
+  # Tests
+  # -------------------------------------------------------
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: lint
+
+    env:
+      # Use dummy values for unit tests — lib/ functions should mock external calls
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_ANON_KEY: placeholder-key
+      DEEPINFRA_API_KEY: placeholder-key
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short --cov=lib --cov-report=term-missing
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: htmlcov/
+
+  # -------------------------------------------------------
+  # Deployment is automatic via Streamlit Community Cloud
+  # It watches the main branch and redeploys on every push.
+  # No deploy step needed here.
+  # -------------------------------------------------------
