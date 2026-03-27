@@ -1,6 +1,6 @@
 import streamlit as st
-from gotrue import User
-from gotrue.errors import AuthApiError
+from supabase_auth import User
+from supabase_auth.errors import AuthApiError
 
 from lib.supabase_client import get_supabase
 
