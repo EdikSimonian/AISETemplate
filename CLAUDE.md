@@ -7,7 +7,7 @@ This file gives Claude persistent context about this project so it can assist ef
 <!-- FILL IN: Replace this section with your actual project description -->
 - **What we're building:** [e.g., an AI-powered task management app]
 - **Primary users:** [e.g., small teams of 2–10 people]
-- **Tech stack:** Streamlit (frontend) + Supabase (database/auth) + DeepInfra (AI inference)
+- **Tech stack:** Streamlit (frontend) + Supabase (database/auth) + LiteLLM (AI inference)
 - **Deployment:** Streamlit Community Cloud (frontend) + Supabase hosted (backend)
 
 ## Stack Details
@@ -27,10 +27,10 @@ This file gives Claude persistent context about this project so it can assist ef
 - Use Supabase Storage for file uploads
 - Never call Supabase with the service role key from the frontend — use the anon key + RLS
 
-### DeepInfra
-- DeepInfra is OpenAI-compatible — use the `openai` Python SDK pointed at DeepInfra's base URL
+### LiteLLM
+- LiteLLM proxy is OpenAI-compatible — use the `openai` Python SDK pointed at `https://ai.simonian.online/v1`
 - Client initialized in `lib/deepinfra_client.py`
-- Default model: `meta-llama/Meta-Llama-3.1-8B-Instruct` (fast and free tier)
+- Default model: `gpt-4o-mini` (override with `LITELLM_MODEL` env var)
 - Always stream responses for chat interfaces (`stream=True`)
 - Keep system prompts in a dedicated `prompts/` directory, not hardcoded in UI code
 
@@ -63,13 +63,13 @@ tests/                  # pytest test files
 
 - Check `st.session_state.get("user")` at the top of every protected page
 - Wrap Supabase calls in try/except and surface errors via `st.error()`
-- Stream DeepInfra responses into `st.write_stream()`
+- Stream LiteLLM responses into `st.write_stream()`
 - Write pytest tests for all `lib/` functions — Streamlit UI is not unit tested
 
 ## Patterns to Avoid
 
 - Do not put the Supabase service role key in the Streamlit app
-- Do not call DeepInfra with user-controlled prompts that bypass your system prompt
+- Do not call LiteLLM with user-controlled prompts that bypass your system prompt
 - Do not use `st.experimental_rerun()` — use `st.rerun()` (Streamlit 1.27+)
 - Do not store sensitive data in `st.session_state` beyond the user session
 

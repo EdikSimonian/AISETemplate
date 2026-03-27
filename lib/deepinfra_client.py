@@ -6,28 +6,28 @@ from openai import OpenAI
 try:
     import streamlit as st
 
-    api_key = st.secrets["DEEPINFRA_API_KEY"]
-    model = st.secrets.get("DEEPINFRA_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct")
+    api_key = st.secrets.get("LITELLM_API_KEY", "")
+    model = st.secrets.get("LITELLM_MODEL", "gpt-4o-mini")
 except Exception:
-    api_key = os.environ["DEEPINFRA_API_KEY"]
-    model = os.environ.get("DEEPINFRA_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct")
+    api_key = os.environ.get("LITELLM_API_KEY", "")
+    model = os.environ.get("LITELLM_MODEL", "gpt-4o-mini")
 
 _client: OpenAI | None = None
 
 
 def get_client() -> OpenAI:
-    """Return a singleton DeepInfra client."""
+    """Return a singleton LiteLLM client."""
     global _client
     if _client is None:
         _client = OpenAI(
-            api_key=api_key,
-            base_url="https://api.deepinfra.com/v1/openai",
+            api_key=api_key or "no-key",
+            base_url="https://ai.simonian.online/v1",
         )
     return _client
 
 
 def stream_response(system_prompt: str, user_message: str) -> Generator[str, None, None]:
-    """Stream a response from DeepInfra. Use with st.write_stream()."""
+    """Stream a response from LiteLLM. Use with st.write_stream()."""
     client = get_client()
     stream = client.chat.completions.create(
         model=model,
@@ -46,7 +46,7 @@ def stream_response(system_prompt: str, user_message: str) -> Generator[str, Non
 
 
 def get_response(system_prompt: str, user_message: str) -> str:
-    """Get a full (non-streaming) response from DeepInfra."""
+    """Get a full (non-streaming) response from LiteLLM."""
     client = get_client()
     response = client.chat.completions.create(
         model=model,
