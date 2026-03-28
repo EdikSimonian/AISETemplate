@@ -5,7 +5,22 @@
       "Bash(git remote:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "Bash(pip show:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(pip install:*)",
+      "Bash(black --check .)",
+      "Bash(isort --check-only .)",
+      "Bash(flake8 .)",
+      "Bash(python3 -m venv /tmp/lint-venv)",
+      "Bash(/tmp/lint-venv/bin/pip install:*)",
+      "Bash(/tmp/lint-venv/bin/black --check .)",
+      "Bash(/tmp/lint-venv/bin/isort --check-only .)",
+      "Bash(/tmp/lint-venv/bin/flake8 .)",
+      "Bash(/tmp/lint-venv/bin/black .)",
+      "Bash(gh run:*)"
     ]
   }
 }

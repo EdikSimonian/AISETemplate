@@ -1,10 +1,8 @@
 import streamlit as st
 
 from lib.auth import login
-from lib.ui import hide_chrome
 
 st.set_page_config(page_title="Log in", layout="centered")
-hide_chrome()
 st.title("Log in")
 
 with st.form("login"):
