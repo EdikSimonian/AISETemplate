@@ -13,7 +13,7 @@ user = get_current_user()
 if user:
     pg = st.navigation(
         [
-            st.Page("pages/home.py", title="Home", icon="🏠"),
+            st.Page("pages/home.py", title="Home", icon=":material/home:"),
         ]
     )
     with st.sidebar:
