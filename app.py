@@ -1,12 +1,14 @@
 import streamlit as st
 
 from lib.auth import get_current_user
+from lib.ui import hide_chrome
 
 st.set_page_config(
     page_title="Workshop App",
     page_icon="🚀",
     layout="centered",
 )
+hide_chrome()
 
 # ------------------------------------------------------------------
 # Auth gate — redirect to login if no active session

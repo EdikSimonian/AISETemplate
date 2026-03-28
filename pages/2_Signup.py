@@ -1,8 +1,10 @@
 import streamlit as st
 
 from lib.auth import signup
+from lib.ui import hide_chrome
 
 st.set_page_config(page_title="Sign up", layout="centered")
+hide_chrome()
 st.title("Create an account")
 
 with st.form("signup"):
