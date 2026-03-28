@@ -5,17 +5,17 @@ from supabase_auth.errors import AuthApiError
 from lib.supabase_client import get_supabase
 
 
-def login(email: str, password: str) -> User | None:
-    """Sign in with email and password. Stores user in session state on success."""
+def login(email: str, password: str) -> tuple[User | None, str | None]:
+    """Sign in with email and password. Returns (user, error_message)."""
     supabase = get_supabase()
     try:
         response = supabase.auth.sign_in_with_password(
             {"email": email, "password": password}
         )
         st.session_state["user"] = response.user
-        return response.user
-    except AuthApiError:
-        return None
+        return response.user, None
+    except AuthApiError as e:
+        return None, e.message
 
 
 def signup(email: str, password: str, name: str) -> User | None:

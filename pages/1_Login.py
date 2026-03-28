@@ -13,11 +13,11 @@ if submitted:
     if not email or not password:
         st.error("Email and password are required.")
     else:
-        user = login(email, password)
+        user, error = login(email, password)
         if user:
             st.rerun()
         else:
-            st.error("Invalid email or password.")
+            st.error(error)
 
 st.divider()
 st.write("Don't have an account?")

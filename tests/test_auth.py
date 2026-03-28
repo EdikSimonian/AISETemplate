@@ -33,9 +33,10 @@ class TestLogin:
 
         from lib.auth import login
 
-        result = login("user@example.com", "password123")
+        user, error = login("user@example.com", "password123")
 
-        assert result == fake_user
+        assert user == fake_user
+        assert error is None
         assert mock_session_state["user"] == fake_user
 
     def test_returns_none_on_invalid_credentials(
@@ -49,9 +50,10 @@ class TestLogin:
 
         from lib.auth import login
 
-        result = login("user@example.com", "wrongpassword")
+        user, error = login("user@example.com", "wrongpassword")
 
-        assert result is None
+        assert user is None
+        assert error == "Invalid credentials"
         assert "user" not in mock_session_state
 
 
