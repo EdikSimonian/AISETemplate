@@ -12,7 +12,7 @@ st.set_page_config(
 if "token_hash" in st.query_params and not st.session_state.get("user"):
     user, error = confirm_email(
         st.query_params["token_hash"],
-        st.query_params.get("type", "signup"),
+        st.query_params.get("type", "email"),
     )
     if user:
         st.query_params.clear()
