@@ -44,6 +44,19 @@ def logout() -> None:
     st.session_state.pop("user", None)
 
 
+def confirm_email(token_hash: str, token_type: str) -> tuple[User | None, str | None]:
+    """Exchange an email confirmation token for a session. Returns (user, error)."""
+    supabase = get_supabase()
+    try:
+        response = supabase.auth.verify_otp(
+            {"token_hash": token_hash, "type": token_type}
+        )
+        st.session_state["user"] = response.user
+        return response.user, None
+    except AuthApiError as e:
+        return None, e.message
+
+
 def get_current_user() -> User | None:
     """Return the current user from session state, or None if not logged in."""
     return st.session_state.get("user")
