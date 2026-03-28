@@ -3,7 +3,7 @@ Tests for lib/auth.py
 Supabase client is mocked — no real network calls.
 """
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -27,7 +27,9 @@ def mock_session_state(monkeypatch):
 class TestLogin:
     def test_returns_user_on_valid_credentials(self, mock_supabase, mock_session_state):
         fake_user = MagicMock()
-        mock_supabase.auth.sign_in_with_password.return_value = MagicMock(user=fake_user)
+        mock_supabase.auth.sign_in_with_password.return_value = MagicMock(
+            user=fake_user
+        )
 
         from lib.auth import login
 
@@ -36,8 +38,10 @@ class TestLogin:
         assert result == fake_user
         assert mock_session_state["user"] == fake_user
 
-    def test_returns_none_on_invalid_credentials(self, mock_supabase, mock_session_state):
-        from gotrue.errors import AuthApiError
+    def test_returns_none_on_invalid_credentials(
+        self, mock_supabase, mock_session_state
+    ):
+        from supabase_auth.errors import AuthApiError
 
         mock_supabase.auth.sign_in_with_password.side_effect = AuthApiError(
             message="Invalid credentials", status=400, code="invalid_credentials"

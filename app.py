@@ -33,6 +33,7 @@ st.write(f"Welcome, **{user.user_metadata.get('name', user.email)}**!")
 
 if st.button("Log out"):
     from lib.auth import logout
+
     logout()
     st.rerun()
 

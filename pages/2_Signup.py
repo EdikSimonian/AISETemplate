@@ -19,7 +19,9 @@ if submitted:
     else:
         user = signup(email, password, name)
         if user:
-            st.success("Account created! Please check your email to confirm, then log in.")
+            st.success(
+                "Account created! Please check your email to confirm, then log in."
+            )
             if st.button("Go to login"):
                 st.switch_page("pages/1_Login.py")
         else:

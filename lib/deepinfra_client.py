@@ -26,14 +26,19 @@ def get_client() -> OpenAI:
     return _client
 
 
-def stream_response(system_prompt: str, user_message: str) -> Generator[str, None, None]:
+def stream_response(
+    system_prompt: str, user_message: str
+) -> Generator[str, None, None]:
     """Stream a response from LiteLLM. Use with st.write_stream()."""
     client = get_client()
     stream = client.chat.completions.create(
         model=model,
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message[:4000]},  # guard against huge inputs
+            {
+                "role": "user",
+                "content": user_message[:4000],
+            },  # guard against huge inputs
         ],
         stream=True,
         max_tokens=1024,
