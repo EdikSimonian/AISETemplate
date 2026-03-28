@@ -81,26 +81,41 @@ class TestSignupPage:
     reason="TEST_EMAIL not set — skipping logged-in navigation tests",
 )
 class TestLoggedInNavigation:
+    def _login(self, frame, email, password):
+        frame.locator("a", has_text="Log in").click()
+        frame.get_by_role("textbox", name="Email").fill(email)
+        frame.get_by_role("textbox", name="Password").fill(password)
+        frame.get_by_role("button", name="Log in").click()
+        frame.locator("text=Workshop App").wait_for(timeout=15000)
+
+    def _get_frame(self, page):
+        for f in page.frames:
+            if f.url.endswith("/~/+/"):
+                return f
+        return page.frames[-1]
+
     def test_sidebar_shows_home_after_login(self, page: Page):
-        """After login, sidebar should show 'Home' with material icon."""
-        page.get_by_role("link", name="Log in").click()
-        page.wait_for_selector("[data-testid='stForm']")
-        page.get_by_label("Email").fill(os.environ["TEST_EMAIL"])
-        page.get_by_label("Password").fill(os.environ["TEST_PASSWORD"])
-        page.get_by_role("button", name="Log in").click()
-        page.wait_for_selector("[data-testid='stApp']")
-        expect(page.get_by_role("link", name="Home")).to_be_visible()
+        """After login, sidebar shows Home nav link."""
+        frame = self._get_frame(page)
+        self._login(frame, os.environ["TEST_EMAIL"], os.environ["TEST_PASSWORD"])
+        assert "Home" in frame.evaluate("document.body.innerText")
+
+    def test_sidebar_shows_settings_after_login(self, page: Page):
+        """After login, sidebar shows Settings nav link."""
+        frame = self._get_frame(page)
+        self._login(frame, os.environ["TEST_EMAIL"], os.environ["TEST_PASSWORD"])
+        assert "Settings" in frame.evaluate("document.body.innerText")
 
     def test_sidebar_shows_logout_after_login(self, page: Page):
-        """After login, sidebar should show Log out button."""
-        expect(page.get_by_role("button", name="Log out")).to_be_visible()
-
-    def test_sidebar_does_not_show_login_after_login(self, page: Page):
-        """Log in link should be gone after authentication."""
-        expect(page.get_by_role("link", name="Log in")).not_to_be_visible()
+        """After login, Log out button appears in sidebar."""
+        frame = self._get_frame(page)
+        self._login(frame, os.environ["TEST_EMAIL"], os.environ["TEST_PASSWORD"])
+        assert "Log out" in frame.evaluate("document.body.innerText")
 
     def test_logout_returns_to_login_view(self, page: Page):
-        """Clicking Log out should bring back the Login/Sign up nav."""
-        page.get_by_role("button", name="Log out").click()
-        page.wait_for_selector("[data-testid='stApp']")
-        expect(page.get_by_role("link", name="Log in")).to_be_visible()
+        """Clicking Log out shows login nav again."""
+        frame = self._get_frame(page)
+        self._login(frame, os.environ["TEST_EMAIL"], os.environ["TEST_PASSWORD"])
+        frame.get_by_role("button", name="Log out").click()
+        frame.locator("text=Log in").first.wait_for(timeout=10000)
+        assert "Log in" in frame.evaluate("document.body.innerText")

@@ -14,6 +14,7 @@ if user:
     pg = st.navigation(
         [
             st.Page("pages/home.py", title="Home", icon=":material/home:"),
+            st.Page("pages/settings.py", title="Settings", icon=":material/settings:"),
         ]
     )
     with st.sidebar:
