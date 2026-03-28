@@ -1,6 +1,6 @@
 import streamlit as st
 
-from lib.auth import get_current_user
+from lib.auth import get_current_user, logout
 
 st.set_page_config(
     page_title="Workshop App",
@@ -16,6 +16,11 @@ if user:
             st.Page("pages/home.py", title="Home", icon="🏠"),
         ]
     )
+    with st.sidebar:
+        st.divider()
+        if st.button("Log out", use_container_width=True):
+            logout()
+            st.rerun()
 else:
     pg = st.navigation(
         [
