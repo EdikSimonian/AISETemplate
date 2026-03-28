@@ -2,7 +2,6 @@ import streamlit as st
 
 from lib.auth import signup
 
-st.set_page_config(page_title="Sign up", layout="centered")
 st.title("Create an account")
 
 with st.form("signup"):
@@ -22,8 +21,6 @@ if submitted:
             st.success(
                 "Account created! Please check your email to confirm, then log in."
             )
-            if st.button("Go to login"):
-                st.switch_page("pages/1_Login.py")
         else:
             st.error("Could not create account. This email may already be registered.")
 

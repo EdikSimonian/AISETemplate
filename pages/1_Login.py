@@ -2,7 +2,6 @@ import streamlit as st
 
 from lib.auth import login
 
-st.set_page_config(page_title="Log in", layout="centered")
 st.title("Log in")
 
 with st.form("login"):
@@ -16,8 +15,7 @@ if submitted:
     else:
         user = login(email, password)
         if user:
-            st.success("Logged in!")
-            st.switch_page("app.py")
+            st.rerun()
         else:
             st.error("Invalid email or password.")
 
